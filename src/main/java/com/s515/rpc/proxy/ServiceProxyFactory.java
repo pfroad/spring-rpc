@@ -1,5 +1,7 @@
 package com.s515.rpc.proxy;
 
+import com.s515.rpc.invoker.Invoker;
+
 import java.lang.reflect.Proxy;
 
 /**
@@ -12,15 +14,15 @@ public class ServiceProxyFactory<T> {
         this.type = type;
     }
 
-    public T newInstance(Class<T> type) {
+    public T newInstance(Invoker invoker) {
         if (type.isInterface()) {
-            return (T) Proxy.newProxyInstance(type.getClassLoader(), new Class[] {type}, new JdkDynamicProxy(type));
+            return (T) Proxy.newProxyInstance(type.getClassLoader(), new Class[] {type}, new JdkDynamicProxy(type, invoker));
         } else {
-            return new CglibProxy<T>().getProxy(type);
+            return new CglibProxy<T>(invoker).getProxy(type);
         }
     }
 
-    public T newInstance() {
-        return newInstance(type);
-    }
+//    public T newInstance(Invoker invoker) {
+//        return newInstance(invoker);
+//    }
 }
