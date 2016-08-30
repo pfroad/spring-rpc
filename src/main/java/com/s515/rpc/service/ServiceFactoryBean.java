@@ -8,8 +8,15 @@ import org.springframework.beans.factory.FactoryBean;
  */
 public class ServiceFactoryBean<T> implements FactoryBean<T> {
     private Class<T> serviceType;
-    private ServiceRegistry serviceRegistry;
+    private ServiceRegistry serviceRegistry = new ServiceRegistry();
     private Invoker invoker;
+
+    public ServiceFactoryBean() {
+    }
+
+    public ServiceFactoryBean(Class<T> serviceType) {
+        this.serviceType = serviceType;
+    }
 
     public T getObject() throws Exception {
         return serviceRegistry.getService(serviceType, invoker);

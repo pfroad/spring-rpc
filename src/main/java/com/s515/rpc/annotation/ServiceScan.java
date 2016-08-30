@@ -1,5 +1,7 @@
 package com.s515.rpc.annotation;
 
+import org.springframework.context.annotation.Import;
+
 import java.lang.annotation.*;
 
 /**
@@ -8,5 +10,9 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented
+@Import(ServiceScannerRegistrar.class)
 public @interface ServiceScan {
+    String[] basePackages() default {};
+
+    Class<? extends Annotation> annotationClass() default Annotation.class;
 }

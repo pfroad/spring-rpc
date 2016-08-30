@@ -25,6 +25,6 @@ public class CglibProxy<T> implements MethodInterceptor {
     }
 
     public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
-        return null;
+        return invoker.execute(method, objects);
     }
 }

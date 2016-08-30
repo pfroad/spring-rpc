@@ -22,7 +22,8 @@ public class ServiceRegistry {
 
     public <T> T getService(Class<T> type, Invoker invoker) {
         if (!knownServices.containsKey(type)) {
-            throw new ServiceNotFoundException("Type " + type + " is not known to the ServiceRegistry.");
+//            throw new ServiceNotFoundException("Type " + type + " is not known to the ServiceRegistry.");
+        	knownServices.put(type, new ServiceProxyFactory(type));
         }
 
         final ServiceProxyFactory<T> serviceProxyFactory = (ServiceProxyFactory<T>) knownServices.get(type);
