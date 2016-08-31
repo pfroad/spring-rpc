@@ -2,6 +2,8 @@ package com.s515.rpc.invoker.http;
 
 import com.s515.rpc.invoker.Invoker;
 import com.s515.rpc.invoker.data.Request;
+import com.s515.rpc.router.LoadBalance;
+import com.s515.rpc.router.server.Node;
 import com.s515.rpc.service.annotation.Path;
 import com.s515.rpc.service.annotation.Service;
 import org.apache.http.HttpEntity;
@@ -38,7 +40,9 @@ public class HttpInvoker implements Invoker {
     /**
      * hostname:port
      */
-    private String[] hosts;
+    private List<Node> nodes;
+
+    private LoadBalance loadBalance;
 
     @Override
     public Object execute(Method method, Object[] args) {
@@ -46,7 +50,7 @@ public class HttpInvoker implements Invoker {
 
         Map<String, Object> params = getParametersMap(method, args);
 
-        HttpPost post = new HttpPost(selectHost() + getService(method));
+        HttpPost post = new HttpPost(selectAppNode() + getInterface(method));
         CloseableHttpResponse response = null;
         try {
             List<NameValuePair> nvps = buildValuePair(params);
@@ -114,7 +118,7 @@ public class HttpInvoker implements Invoker {
         return null;
     }
 
-    public String getService(Method method) {
+    public String getInterface(Method method) {
         Service service = method.getDeclaringClass().getAnnotation(Service.class);
         Path path = method.getAnnotation(Path.class);
         
@@ -149,8 +153,13 @@ public class HttpInvoker implements Invoker {
         return nvps;
     }
 
-    public String selectHost() {
-        return "http://localhost:8090/app";
+    public String selectAppNode() {
+        Node appNode = loadBalance.select(nodes);
+        
+        if (appNode != null)
+        	return appNode.getNodeUrl();
+        
+        return null;
     }
 
     public CloseableHttpClient getHttpClient() {
@@ -161,12 +170,19 @@ public class HttpInvoker implements Invoker {
         this.httpClient = httpClient;
     }
 
-	public String[] getHosts() {
-		return hosts;
+    public List<Node> getNodes() {
+		return nodes;
 	}
 
-	public void setHosts(String[] hosts) {
-		this.hosts = hosts;
+	public void setNodes(List<Node> nodes) {
+		this.nodes = nodes;
 	}
 
+	public LoadBalance getLoadBalance() {
+        return loadBalance;
+    }
+
+    public void setLoadBalance(LoadBalance loadBalance) {
+        this.loadBalance = loadBalance;
+    }
 }
