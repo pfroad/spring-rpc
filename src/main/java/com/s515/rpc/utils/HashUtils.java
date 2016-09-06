@@ -1,4 +1,4 @@
-package com.s515.rpc.Utils;
+package com.s515.rpc.utils;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
