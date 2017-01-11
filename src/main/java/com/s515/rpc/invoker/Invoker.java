@@ -1,5 +1,6 @@
 package com.s515.rpc.invoker;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 
 /**
@@ -7,4 +8,8 @@ import java.lang.reflect.Method;
  */
 public interface Invoker {
     Object execute(Method method, Object[] args);
+    
+    void start();
+    
+    void close() throws IOException;
 }

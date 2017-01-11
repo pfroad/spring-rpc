@@ -185,4 +185,16 @@ public class HttpInvoker implements Invoker {
     public void setLoadBalance(LoadBalance loadBalance) {
         this.loadBalance = loadBalance;
     }
+
+	@Override
+	public void close() throws IOException {
+		if (httpClient != null) {
+			httpClient.close();
+		}
+	}
+
+	@Override
+	public void start() {
+		
+	}
 }
