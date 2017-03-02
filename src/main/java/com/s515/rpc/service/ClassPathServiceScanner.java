@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Set;
 
+import com.s515.rpc.service.annotation.Service;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
@@ -125,6 +126,7 @@ public class ClassPathServiceScanner extends ClassPathBeanDefinitionScanner {
 	protected boolean isCandidateComponent(
 			AnnotatedBeanDefinition beanDefinition) {
 		return beanDefinition.getMetadata().isInterface()
-				&& beanDefinition.getMetadata().isIndependent();
+				&& beanDefinition.getMetadata().isIndependent()
+				&& beanDefinition.getMetadata().hasAnnotation(Service.class.getName());
 	}
 }
